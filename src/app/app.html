@@ -19,8 +19,8 @@
           <td>{{ emp.contactNo }}</td>
           <td>{{ emp.emailId }}</td>
           <td>
-            <button>Edit</button>
-            <button>Delete</button>
+            <button (click)="editEmployee(emp)">Edit</button>
+            <button (click)="deleteUser(emp.id)">Delete</button>
           </td>
         </tr>
       </tbody>
@@ -30,7 +30,7 @@
   <!-- New Employee Form -->
   <div class="new-employee">
     <h3 class="header">New Employee</h3>
-    <form [formGroup]="employeeForm" (ngSubmit)="onSave()">
+    <form [formGroup]="employeeForm" (ngSubmit)="isEdit ? addData() : editData()">
       <div class="form-group">
         <label>Name</label>
         <input formControlName="name" type="text" />
@@ -74,7 +74,7 @@
 
       <div class="btn-group">
         <button type="reset" class="btn reset-btn">Reset</button>
-        <button type="submit" class="btn save-btn" (click)=" addData()">Save Employee</button>
+        <button type="submit" class="btn save-btn" [disabled]="employeeForm.invalid">{{isEdit? 'submit':'Edit'}}</button>
       </div>
     </form>
   </div>

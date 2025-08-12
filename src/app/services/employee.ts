@@ -16,4 +16,12 @@ export class Employee {
   addData(employee: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, employee)
   }
+
+  updateData(employee:any): Observable<any> {
+  return this.http.put<any>(`${this.apiUrl}/${employee.id}`, employee);
+  }
+  
+  removeData(id: number):Observable<any>{
+return this.http.delete<any>(`${this.apiUrl}/${id}`)
+  }
 }

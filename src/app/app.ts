@@ -22,13 +22,15 @@ export class App {
     contactNo: '',
     address: ''
   };
+  isEdit = true;
   constructor(private fb: FormBuilder, private emp: Employee) {
     this.employeeForm = this.fb.group({
+      id: [''], // <-- add this line for id
       name: ['', [Validators.required, Validators.minLength(3)]],
       city: ['', [Validators.required]],
       state: ['', [Validators.required]],
       pin: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
-      emailId: ['', [Validators.required,]],
+      emailId: ['', [Validators.required, Validators.email]],
       contactNo: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       address: ['', [Validators.required]]
     });
@@ -66,8 +68,77 @@ export class App {
       return this.emp.addData(this.newEmployee).subscribe((data) => {
         if (data) {
           this.getEmployee()
+          this.employeeForm.reset();
         }
       });
     }
   }
+
+
+
+  editEmployee(employee: any) {
+    console.log('Employee received for edit:', employee);
+    this.isEdit = false;
+
+    this.employeeForm.patchValue({
+      id: employee.id || '',
+      name: employee.name || '',
+      city: employee.city || '',
+      state: employee.state || '',
+      pin: employee.pin || '000000', // placeholder to pass validation
+      emailId: employee.emailId || '',
+      contactNo: employee.contactNo || '',
+      address: employee.address || 'N/A' // placeholder
+    });
+  }
+
+
+  editData(): Subscription | void {
+    console.log('Form valid before update:', this.employeeForm.valid);
+    console.log('Form errors before update:', this.employeeForm.errors);
+    console.log('Form value before update:', this.employeeForm.value);
+
+    if (this.employeeForm.valid) {
+      this.newEmployee = this.employeeForm.value;
+      return this.emp.updateData(this.newEmployee).subscribe({
+        next: (data) => {
+          if (data) {
+            this.getEmployee();
+            this.employeeForm.reset();
+            this.isEdit = true;
+          }
+        },
+        error: (err) => {
+          console.error('Update failed', err);
+        }
+      });
+    } else {
+      console.log('Form invalid:', this.employeeForm.errors);
+    }
+  }
+
+ deleteUser(id: number): Subscription|void {
+  this.emp.removeData(id).subscribe({
+    next: () => {
+      console.log('Deleted successfully');
+      this.getEmployee();
+    },
+    error: (err) => {
+      console.error('Error deleting:', err);
+    }
+  });
+}
+// deleteEmployee(id: number) {
+//   this.emp.removeData(id).subscribe({
+//     next: () => {
+//       this.employees = this.employees.filter(emp => emp.id !== id);
+//       console.log('Deleted successfully');
+//     },
+//     error: (err) => {
+//       console.error('Error deleting:', err);
+//     }
+//   });
+// }
+
+
 }
