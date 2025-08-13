@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +11,19 @@ export class Employee {
   private apiUrl = 'http://localhost:3000/employees';
 
   getEmployee(){
-    return this.http.get<any>(this.apiUrl)
+    return this.http.get<User[]>(this.apiUrl)
   }
 
-  addData(employee: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, employee)
+  addData(user: User): Observable<any> {
+    return this.http.post<User[]>(this.apiUrl, user)
   }
 
-  updateData(employee:any): Observable<any> {
-  return this.http.put<any>(`${this.apiUrl}/${employee.id}`, employee);
+  updateData(user: User): Observable<any> {
+  return this.http.put<User[]>(`${this.apiUrl}/${user.id}`, user);
   }
   
   removeData(id: number):Observable<any>{
-return this.http.delete<any>(`${this.apiUrl}/${id}`)
+return this.http.delete<void>(`${this.apiUrl}/${id}`)
   }
+
 }

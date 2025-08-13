@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterOutlet } from '@angular/router';
 import { Employee } from './services/employee';
 import { Subscription } from 'rxjs';
+import { User } from './models/user';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +14,13 @@ import { Subscription } from 'rxjs';
 })
 export class App {
   employeeForm: FormGroup;
-  employees: any[] = [];
-  newEmployee = {
+  employees: User[] = [];
+  newEmployee: User = {
+    id: 0,
     name: '',
     city: '',
     state: '',
+    pin: '',
     emailId: '',
     contactNo: '',
     address: ''
@@ -76,19 +79,19 @@ export class App {
 
 
 
-  editEmployee(employee: any) {
-    console.log('Employee received for edit:', employee);
+  editEmployee(user: User) {
+    console.log('Employee received for edit:', user);
     this.isEdit = false;
 
     this.employeeForm.patchValue({
-      id: employee.id || '',
-      name: employee.name || '',
-      city: employee.city || '',
-      state: employee.state || '',
-      pin: employee.pin || '000000', // placeholder to pass validation
-      emailId: employee.emailId || '',
-      contactNo: employee.contactNo || '',
-      address: employee.address || 'N/A' // placeholder
+      id: user.id || '',
+      name: user.name || '',
+      city: user.city || '',
+      state: user.state || '',
+      pin: user.pin || '000000', // placeholder to pass validation
+      emailId: user.emailId || '',
+      contactNo: user.contactNo || '',
+      address: user.address || 'N/A' // placeholder
     });
   }
 
@@ -117,28 +120,28 @@ export class App {
     }
   }
 
- deleteUser(id: number): Subscription|void {
-  this.emp.removeData(id).subscribe({
-    next: () => {
-      console.log('Deleted successfully');
-      this.getEmployee();
-    },
-    error: (err) => {
-      console.error('Error deleting:', err);
-    }
-  });
-}
-// deleteEmployee(id: number) {
-//   this.emp.removeData(id).subscribe({
-//     next: () => {
-//       this.employees = this.employees.filter(emp => emp.id !== id);
-//       console.log('Deleted successfully');
-//     },
-//     error: (err) => {
-//       console.error('Error deleting:', err);
-//     }
-//   });
-// }
+  deleteUser(id: number): Subscription | void {
+    this.emp.removeData(id).subscribe({
+      next: () => {
+        console.log('Deleted successfully');
+        this.getEmployee();
+      },
+      error: (err) => {
+        console.error('Error deleting:', err);
+      }
+    });
+  }
+  // deleteEmployee(id: number) {
+  //   this.emp.removeData(id).subscribe({
+  //     next: () => {
+  //       this.employees = this.employees.filter(emp => emp.id !== id);
+  //       console.log('Deleted successfully');
+  //     },
+  //     error: (err) => {
+  //       console.error('Error deleting:', err);
+  //     }
+  //   });
+  // }
 
 
 }
